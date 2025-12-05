@@ -14,17 +14,46 @@
 
 ### 実行方法
 
+#### カレントディレクトリで実行（従来の方法）
+
 ```bash
 python concatenate_files.py
 ```
 
+#### 指定ディレクトリで実行
+
+```bash
+python concatenate_files.py -d <ディレクトリパス>
+```
+
+または
+
+```bash
+python concatenate_files.py --directory <ディレクトリパス>
+```
+
+**例：**
+
+```bash
+# Windowsの場合
+python concatenate_files.py -d C:\novels\my_novel
+
+# Linux/macOSの場合
+python concatenate_files.py -d /path/to/novels
+```
+
+#### ヘルプの表示
+
+```bash
+python concatenate_files.py --help
+```
+
 ### ファイル構成
 
-スクリプトと同じディレクトリに以下のファイルを配置してください：
+処理対象のディレクトリに以下のファイルを配置してください：
 
-```
-.
-├── concatenate_files.py
+```text
+your_directory/
 ├── about.txt
 ├── episode_0001.txt
 ├── episode_0002.txt
@@ -32,11 +61,13 @@ python concatenate_files.py
 └── ...
 ```
 
+出力ファイル `union.txt` は指定したディレクトリ内に作成されます。
+
 ### エピソードファイルの形式
 
 各 `episode_*.txt` ファイルは以下の形式を推奨します：
 
-```
+```text
 【タイトル】
 第1話 救出・前編【Depth 1】
 
@@ -49,7 +80,7 @@ python concatenate_files.py
 
 実行すると `union.txt` が生成されます：
 
-```
+```text
 ==== BEGIN META ====
 [about.txt の内容]
 ==== END META ====

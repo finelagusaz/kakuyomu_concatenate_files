@@ -1,12 +1,18 @@
 import os
 import glob
 import re
+import argparse
+import sys
 
-def concatenate_files():
-    """about.txt と episode_*.txt を連結して union.txt に出力する"""
+def concatenate_files(directory_path="."):
+    """about.txt と episode_*.txt を連結して union.txt に出力する
 
-    output_file = "union.txt"
-    about_file = "about.txt"
+    Args:
+        directory_path: 処理対象のディレクトリパス（デフォルト: カレントディレクトリ）
+    """
+
+    output_file = os.path.join(directory_path, "union.txt")
+    about_file = os.path.join(directory_path, "about.txt")
 
     # 出力ファイルを開く
     with open(output_file, 'w', encoding='utf-8') as outfile:
@@ -21,7 +27,7 @@ def concatenate_files():
             print(f"Warning: {about_file} not found, skipping...")
 
         # 2. episode_*.txt ファイルを取得してソート
-        episode_files = glob.glob("episode_*.txt")
+        episode_files = glob.glob(os.path.join(directory_path, "episode_*.txt"))
 
         # ファイル名から番号を抽出してソート
         def extract_number(filename):
@@ -60,5 +66,35 @@ def concatenate_files():
     print(f"\nCompleted! Output written to: {output_file}")
     print(f"Total files processed: {len(episode_files) + (1 if os.path.exists(about_file) else 0)}")
 
+def main():
+    """メイン関数：コマンドライン引数を解析して実行"""
+    parser = argparse.ArgumentParser(
+        description="about.txt と episode_*.txt を連結して union.txt に出力する"
+    )
+    parser.add_argument(
+        "-d", "--directory",
+        type=str,
+        default=".",
+        help="処理対象のディレクトリパス（デフォルト: カレントディレクトリ）"
+    )
+
+    args = parser.parse_args()
+
+    # ディレクトリの存在チェック
+    if not os.path.exists(args.directory):
+        print(f"Error: ディレクトリが見つかりません: {args.directory}", file=sys.stderr)
+        sys.exit(1)
+
+    if not os.path.isdir(args.directory):
+        print(f"Error: 指定されたパスはディレクトリではありません: {args.directory}", file=sys.stderr)
+        sys.exit(1)
+
+    # 連結処理を実行
+    try:
+        concatenate_files(args.directory)
+    except Exception as e:
+        print(f"Error: 処理中にエラーが発生しました: {e}", file=sys.stderr)
+        sys.exit(1)
+
 if __name__ == "__main__":
-    concatenate_files()
+    main()
